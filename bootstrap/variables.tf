@@ -13,7 +13,7 @@ variable "resource_group_name" {
 variable "storage_account_name" {
   description = "Storage account for tfstate"
   type        = string
-  default     = "tfstateplatform001"
+  default     = "tfstateplataformxyz123"
 }
 
 variable "container_name" {
