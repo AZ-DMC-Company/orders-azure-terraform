@@ -8,31 +8,41 @@ on:
 jobs:
   terraform:
     runs-on: ubuntu-latest
+
     steps:
+      # 1️⃣ Checkout code
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # 2️⃣ Setup Terraform
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
 
+      # 3️⃣ Terraform Init
       - name: Terraform Init
-        run: terraform init
+        run: terraform -chdir=infrastructure init
         env:
           ARM_CLIENT_ID: ${{ fromJson(secrets.AZURE_CREDENTIALS).clientId }}
           ARM_CLIENT_SECRET: ${{ fromJson(secrets.AZURE_CREDENTIALS).clientSecret }}
           ARM_SUBSCRIPTION_ID: ${{ fromJson(secrets.AZURE_CREDENTIALS).subscriptionId }}
           ARM_TENANT_ID: ${{ fromJson(secrets.AZURE_CREDENTIALS).tenantId }}
 
+      # 4️⃣ Terraform Plan
       - name: Terraform Plan
-        run: terraform plan -var="backend_image=${{ secrets.BACKEND_IMAGE }}" -var="frontend_image=${{ secrets.FRONTEND_IMAGE }}"
+        run: terraform -chdir=infrastructure plan \
+             -var="backend_image=${{ secrets.BACKEND_IMAGE }}" \
+             -var="frontend_image=${{ secrets.FRONTEND_IMAGE }}"
         env:
           ARM_CLIENT_ID: ${{ fromJson(secrets.AZURE_CREDENTIALS).clientId }}
           ARM_CLIENT_SECRET: ${{ fromJson(secrets.AZURE_CREDENTIALS).clientSecret }}
           ARM_SUBSCRIPTION_ID: ${{ fromJson(secrets.AZURE_CREDENTIALS).subscriptionId }}
           ARM_TENANT_ID: ${{ fromJson(secrets.AZURE_CREDENTIALS).tenantId }}
 
+      # 5️⃣ Terraform Apply
       - name: Terraform Apply
-        run: terraform apply -auto-approve -var="backend_image=${{ secrets.BACKEND_IMAGE }}" -var="frontend_image=${{ secrets.FRONTEND_IMAGE }}"
+        run: terraform -chdir=infrastructure apply -auto-approve \
+             -var="backend_image=${{ secrets.BACKEND_IMAGE }}" \
+             -var="frontend_image=${{ secrets.FRONTEND_IMAGE }}"
         env:
           ARM_CLIENT_ID: ${{ fromJson(secrets.AZURE_CREDENTIALS).clientId }}
           ARM_CLIENT_SECRET: ${{ fromJson(secrets.AZURE_CREDENTIALS).clientSecret }}
