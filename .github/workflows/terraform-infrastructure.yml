@@ -6,7 +6,6 @@ branches:
 - main
 paths:
 - "infrastructure/**"
-
 workflow_dispatch:
 
 permissions:
@@ -22,7 +21,7 @@ defaults:
     working-directory: infrastructure
 
 steps:
-  - name: Checkout
+  - name: Checkout repository
     uses: actions/checkout@v4
 
   - name: Azure Login
@@ -38,7 +37,7 @@ steps:
   - name: Terraform Init
     run: terraform init
 
-  - name: Terraform Format Check
+  - name: Terraform Format
     run: terraform fmt -check
 
   - name: Terraform Validate
