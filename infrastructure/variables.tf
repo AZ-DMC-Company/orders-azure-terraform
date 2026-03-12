@@ -4,9 +4,16 @@ variable "location" {
   default     = "eastus"
 }
 
-variable "existing_containerappsenvironment" {
-  name        = "cae-hansqm2-dev-westus2-001"
-  rg          = "rg-hansqm2-dev-westus2-001"
+variable "existing_cae_name" {
+  description = "Existing CAE name"
+  type        = string  
+  default     = "cae-hansqm2-dev-westus2-001"
+}
+
+variable "existing_cae_rg" {
+  description = "Existing CAE name"
+  type        = string  
+  default     = "rg-hansqm2-dev-westus2-001"
 }
 
 variable "containerapp_backend" {

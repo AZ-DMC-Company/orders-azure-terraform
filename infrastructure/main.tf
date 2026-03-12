@@ -4,8 +4,8 @@ resource "azurerm_resource_group" "apps" {
 }
 
 data  "azurerm_container_app_environment" "env" {
-  name                       = var.existing_containerappsenvironment.name
-  resource_group_name        = var.existing_containerappsenvironment.rg
+  name                       = var.existing_cae_name
+  resource_group_name        = var.existing_cae_rg
 }
 
 resource "azurerm_container_app" "backend" {
