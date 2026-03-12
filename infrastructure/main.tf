@@ -3,18 +3,10 @@ resource "azurerm_resource_group" "apps" {
   location = var.location
 }
 
-resource "azurerm_log_analytics_workspace" "logs" {
-  name                = "aca-logs-demo"
-  location            = var.location
-  resource_group_name = azurerm_resource_group.apps.name
-  sku                 = "PerGB2018"
-}
-
 resource "azurerm_container_app_environment" "env" {
   name                       = "aca-env-demo"
   location                   = var.location
   resource_group_name        = azurerm_resource_group.apps.name
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.logs.id
 }
 
 resource "azurerm_container_app" "backend" {

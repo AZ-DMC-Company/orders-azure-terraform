@@ -4,14 +4,17 @@ on:
   workflow_dispatch:
     inputs:
       action:
-        description: 'Choose action: apply or destroy'
+        description: 'Selecciona la acción a ejecutar'
         required: true
-        default: 'apply'
+        type: choice
+        options:
+          - apply
+          - destroy
+        default: apply
 
 jobs:
   bootstrap:
     runs-on: ubuntu-latest
-
     defaults:
       run:
         working-directory: bootstrap
@@ -28,16 +31,15 @@ jobs:
           terraform_version: 1.6.6
 
       - run: terraform init
-
       - run: terraform fmt -check
-
       - run: terraform validate
 
       - name: Terraform Action
         run: |
           if [ "${{ github.event.inputs.action }}" = "destroy" ]; then
+            echo "🚨 Destruyendo Bootstrap..."
             terraform destroy -auto-approve
           else
+            echo "🛠 Aplicando Bootstrap..."
             terraform plan -out=tfplan
             terraform apply -auto-approve tfplan
-          fi

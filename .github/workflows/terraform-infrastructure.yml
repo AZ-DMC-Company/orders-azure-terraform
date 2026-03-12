@@ -1,56 +1,48 @@
 name: Terraform Infrastructure
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Selecciona la acción a ejecutar'
+        required: true
+        type: choice
+        options:
+          - apply
+          - destroy
+        default: apply
 
 jobs:
-  terraform:
+  infrastructure:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: infrastructure
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
-
-      - name: Login to Azure
-        uses: azure/login@v1
+      - uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.6.6
+
+      - run: terraform init
+
       - name: List Container App Environments
-        run: |
-          az containerapp env list -o table
+        run: az containerapp env list -o table
 
-      - name: Terraform Init
-        run: terraform -chdir=infrastructure init
-        env:
-          ARM_CLIENT_ID: ${{ fromJson(secrets.AZURE_CREDENTIALS).clientId }}
-          ARM_CLIENT_SECRET: ${{ fromJson(secrets.AZURE_CREDENTIALS).clientSecret }}
-          ARM_SUBSCRIPTION_ID: ${{ fromJson(secrets.AZURE_CREDENTIALS).subscriptionId }}
-          ARM_TENANT_ID: ${{ fromJson(secrets.AZURE_CREDENTIALS).tenantId }}
-
-      - name: Terraform Plan
+      - name: Terraform Action
         run: |
-          terraform -chdir=infrastructure plan \
-          -var="backend_image=${{ secrets.BACKEND_IMAGE }}" \
-          -var="frontend_image=${{ secrets.FRONTEND_IMAGE }}"
-        env:
-          ARM_CLIENT_ID: ${{ fromJson(secrets.AZURE_CREDENTIALS).clientId }}
-          ARM_CLIENT_SECRET: ${{ fromJson(secrets.AZURE_CREDENTIALS).clientSecret }}
-          ARM_SUBSCRIPTION_ID: ${{ fromJson(secrets.AZURE_CREDENTIALS).subscriptionId }}
-          ARM_TENANT_ID: ${{ fromJson(secrets.AZURE_CREDENTIALS).tenantId }}
-
-      - name: Terraform Apply
-        run: |
-          terraform -chdir=infrastructure apply -auto-approve \
-          -var="backend_image=${{ secrets.BACKEND_IMAGE }}" \
-          -var="frontend_image=${{ secrets.FRONTEND_IMAGE }}"
-        env:
-          ARM_CLIENT_ID: ${{ fromJson(secrets.AZURE_CREDENTIALS).clientId }}
-          ARM_CLIENT_SECRET: ${{ fromJson(secrets.AZURE_CREDENTIALS).clientSecret }}
-          ARM_SUBSCRIPTION_ID: ${{ fromJson(secrets.AZURE_CREDENTIALS).subscriptionId }}
-          ARM_TENANT_ID: ${{ fromJson(secrets.AZURE_CREDENTIALS).tenantId }}
+          if [ "${{ github.event.inputs.action }}" = "destroy" ]; then
+            echo "🚨 Destruyendo Infraestructura Principal..."
+            terraform destroy -auto-approve
+          else
+            echo "🛠 Aplicando Infraestructura Principal..."
+            terraform plan -out=tfplan \
+              -var="backend_image=${{ secrets.BACKEND_IMAGE }}" \
+              -var="frontend_image=${{ secrets.FRONTEND_IMAGE }}"
+            terraform apply -auto-approve tfplan
