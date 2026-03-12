@@ -21,10 +21,9 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Count Container App Environments
+      - name: List Container App Environments
         run: |
-          COUNT=$(az containerapp env list --query "length(@)" -o tsv)
-          echo "Existing Container App Environments: $COUNT"
+          az containerapp env list -o table
 
       - name: Terraform Init
         run: terraform -chdir=infrastructure init
