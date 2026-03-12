@@ -3,16 +3,15 @@ resource "azurerm_resource_group" "apps" {
   location = var.location
 }
 
-resource "azurerm_container_app_environment" "env" {
-  name                       = var.containerappenvironment
-  location                   = var.location
-  resource_group_name        = azurerm_resource_group.apps.name
+data  "azurerm_container_app_environment" "env" {
+  name                       = var.existing_containerappsenvironment.name
+  resource_group_name        = var.existing_containerappsenvironment.rg
 }
 
 resource "azurerm_container_app" "backend" {
   name                         = var.containerapp_backend
-  container_app_environment_id = azurerm_container_app_environment.env.id
-  resource_group_name          = azurerm_resource_group.apps.name
+  container_app_environment_id = data.azurerm_container_app_environment.env.id
+  resource_group_name          = data.azurerm_resource_group.apps.name
   revision_mode                = "Single"
 
   template {

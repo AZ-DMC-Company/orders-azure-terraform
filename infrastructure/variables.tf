@@ -4,10 +4,9 @@ variable "location" {
   default     = "eastus"
 }
 
-variable "containerappenvironment" {
-  description = "Container app environment description"
-  type        = string
-  default     = "cae-ricvera-dev-eastus-01"
+variable "existing_containerappsenvironment" {
+  name        = "cae-hansqm2-dev-westus2-001"
+  rg          = "rg-hansqm2-dev-westus2-001"
 }
 
 variable "containerapp_backend" {
