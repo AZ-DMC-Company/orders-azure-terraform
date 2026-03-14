@@ -1,26 +1,26 @@
 resource "azurerm_container_app" "backend" {
-
-  name                         = "${local.workload}-backend-${local.env}-01"
+  name                = "${local.workload}-backend-${local.env}-${local.region}-01"
   container_app_environment_id = azurerm_container_app_environment.cae.id
-  resource_group_name          = azurerm_resource_group.rg_app.name
+  location            = azurerm_resource_group.rg_app.location
+  resource_group_name = azurerm_resource_group.rg_app.name
 
-  configuration {
-
-    ingress {
-      external_enabled = false
-      target_port      = 8080
-    }
-
-  }
+  revision_mode = "Single"  # obligatorio
 
   template {
-
     container {
       name   = "backend"
-      image  = var.backend_image
+      image  = var.backend_image   # recuerda que esto viene de un secret en GitHub
       cpu    = 0.25
       memory = "0.5Gi"
+      env {
+        name  = "SPRING_PROFILES_ACTIVE"
+        value = "dev"
+      }
     }
 
+    scale {
+      min_replicas = 0
+      max_replicas = 1
+    }
   }
 }

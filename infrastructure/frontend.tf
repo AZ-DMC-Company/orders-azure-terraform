@@ -1,32 +1,27 @@
 resource "azurerm_container_app" "frontend" {
-
-  name                         = "${local.workload}-frontend-${local.env}-01"
+  name                = "${local.workload}-frontend-${local.env}-${local.region}-01"
   container_app_environment_id = azurerm_container_app_environment.cae.id
-  resource_group_name          = azurerm_resource_group.rg_app.name
+  location            = azurerm_resource_group.rg_app.location
+  resource_group_name = azurerm_resource_group.rg_app.name
 
-  configuration {
-
-    ingress {
-      external_enabled = true
-      target_port      = 80
-      transport        = "auto"
-    }
-
-  }
+  revision_mode = "Single"  # obligatorio
 
   template {
-
     container {
       name   = "frontend"
-      image  = var.frontend_image
+      image  = var.frontend_image   # desde secret en GitHub
       cpu    = 0.25
       memory = "0.5Gi"
-
-      env {
-        name  = "API_URL"
-        value = "http://orders-backend-dev-01:8080"
-      }
     }
 
+    scale {
+      min_replicas = 0
+      max_replicas = 1
+    }
+  }
+
+  traffic {
+    latest_revision = true
+    weight          = 100
   }
 }
