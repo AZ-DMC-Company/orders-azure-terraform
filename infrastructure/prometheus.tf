@@ -18,20 +18,9 @@ resource "azurerm_container_app" "prometheus" {
   template {
     container {
       name   = "prometheus"
-      image  = "prom/prometheus:latest"
+      image  = var.prometheus_image
       cpu    = 0.25
       memory = "0.5Gi"
-
-      # Cada variable de entorno se define con un bloque env
-      env {
-        name  = "PROMETHEUS_TARGET"
-        value = "orders-backend-dev-01.gentleglacier-13b71ce3.eastus.azurecontainerapps.io:8080"
-      }
-
-      args = [
-        "--web.enable-lifecycle",
-        "--config.file=/etc/prometheus/prometheus.yml"
-      ]
     }
   }
 }

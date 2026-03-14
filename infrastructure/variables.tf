@@ -8,6 +8,11 @@ variable "frontend_image" {
   description = "Docker image del frontend Angular"
 }
 
+variable "prometheus_image" {
+  type        = string
+  description = "Docker image del Prometheus"
+}
+
 variable "location" {
   type    = string
   default = "East US"
