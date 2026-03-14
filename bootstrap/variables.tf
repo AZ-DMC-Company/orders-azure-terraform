@@ -13,7 +13,7 @@ variable "resource_group_name" {
 variable "storage_account_name" {
   description = "Storage account for tfstate"
   type        = string
-  default     = "tfstatericveradev01"
+  default     = "tfstatericveradev02"
 }
 
 variable "container_name" {
