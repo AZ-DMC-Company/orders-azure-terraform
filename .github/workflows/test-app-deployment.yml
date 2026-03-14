@@ -39,6 +39,27 @@ jobs:
           fi
           echo "Frontend health check passed."
 
+      - name: Check backend replicas
+        run: |
+          echo "Checking backend replicas..."
+          az containerapp revision list \
+            --name orders-backend-dev-01 \
+            --resource-group orders-rg-app-dev-eus-01 \
+            --query "[].{name:name, active:activeReplicas}" \
+            -o table
+
+      - name: Check backend app status
+        run: |
+          STATUS=$(az containerapp show \
+            --name orders-backend-dev-01 \
+            --resource-group orders-rg-app-dev-eus-01 \
+            --query "properties.provisioningState" -o tsv)
+          echo "Backend provisioning state: $STATUS"
+          if [ "$STATUS" != "Succeeded" ]; then
+            echo "Backend is not ready!"
+            exit 1
+          fi
+
       - name: Test Backend HTTP response
         run: |
           echo "Testing backend at $BACKEND_URL ..."
