@@ -1,11 +1,3 @@
-variable "workload" {
-  default = "prometheus"
-}
-
-variable "env" {
-  default = "dev"
-}
-
 resource "azurerm_container_app" "prometheus" {
   name                         = "${var.workload}-${var.env}-01"
   resource_group_name          = azurerm_resource_group.rg_app.name
