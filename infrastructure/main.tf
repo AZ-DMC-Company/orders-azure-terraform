@@ -1,23 +1,31 @@
-resource "azurerm_resource_group" "apps" {
+resource "azurerm_resource_group" "rg" {
   name     = var.resource_group_name
   location = var.location
 }
 
-data  "azurerm_container_app_environment" "env" {
-  name                       = var.existing_cae_name
-  resource_group_name        = var.existing_cae_rg
+resource  "azurerm_container_app_environment" "env" {
+  name                       = var.container_apps_environment
+  resource_group_name        = azurerm_resource_group.rg.name
+}
+
+resource "azurerm_container_registry" "acr" {
+  name                = var.container_registry
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
+  sku                 = "Basic"
+  admin_enabled       = true
 }
 
 resource "azurerm_container_app" "backend" {
   name                         = var.containerapp_backend
-  container_app_environment_id = data.azurerm_container_app_environment.env.id
-  resource_group_name          = var.resource_group_name
+  container_app_environment_id = azurerm_container_app_environment.env.id
+  resource_group_name          = azurerm_resource_group.rg.name
   revision_mode                = "Single"
 
   template {
     container {
-      name   = var.containerapp_backend
-      image  = var.backend_image
+      name   = "mybackend"
+      image  = var.
       cpu    = 0.5
       memory = "1Gi"
     }
@@ -36,13 +44,13 @@ resource "azurerm_container_app" "backend" {
 
 resource "azurerm_container_app" "frontend" {
   name                         = var.containerapp_frontend
-  container_app_environment_id = data.azurerm_container_app_environment.env.id
-  resource_group_name          = var.resource_group_name
+  container_app_environment_id = azurerm_container_app_environment.env.id
+  resource_group_name          = azurerm_resource_group.rg.name
   revision_mode                = "Single"
 
   template {
     container {
-      name   = var.containerapp_frontend
+      name   = "myfrontend"
       image  = var.frontend_image
       cpu    = 0.25
       memory = "0.5Gi"

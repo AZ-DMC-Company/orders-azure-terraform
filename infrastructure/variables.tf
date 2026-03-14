@@ -1,19 +1,13 @@
 variable "location" {
-  description = "Azure region where resources will be created"
-  type        = string
   default     = "eastus"
 }
 
-variable "existing_cae_name" {
-  description = "Existing CAE name"
-  type        = string  
-  default     = "cae-hansqm2-dev-westus2-001"
+variable "resource_group_name" {
+  default     = "rg-ricvera-dev-eastus-02"
 }
 
-variable "existing_cae_rg" {
-  description = "Resource Group where the existing CAE lives"
-  type        = string  
-  default     = "rg-hansqm2-dev-westus2-001"
+variable "container_apps_environment" {
+  default     = "caericveradev01"
 }
 
 variable "containerapp_backend" {
@@ -24,18 +18,14 @@ variable "containerapp_frontend" {
   default     = "ca-ricvera-dev-frontend"
 }
 
-variable "resource_group_name" {
-  description = "Resource Group for container apps"
-  type        = string
-  default     = "rg-ricvera-dev-eastus-02"
+variable "container_registry" {
+  default     = "cricveradev01"
 }
 
 variable "backend_image" {
-  description = "Docker image for the Spring Boot API backend"
-  type        = string
+  default     = "cricveradev01.azurecr.io/backend:latest"
 }
 
 variable "frontend_image" {
-  description = "Docker image for the React frontend"
-  type        = string
+  default     = "cricveradev01.azurecr.io/frontend:latest"
 }
