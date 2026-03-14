@@ -12,14 +12,22 @@ resource "azurerm_container_app" "backend" {
       cpu    = 0.25
       memory = "0.5Gi"
 
-      liveness_probe {
-        http_get_path = "/health"
-        http_get_port = 8080
+      probe {
+        type      = "Liveness"
+        port      = 8080
+        transport = "Http"
+        http_get {
+          path = "/health"
+        }
       }
 
-      readiness_probe {
-        http_get_path = "/health"
-        http_get_port = 8080
+      probe {
+        type      = "Readiness"
+        port      = 8080
+        transport = "Http"
+        http_get {
+          path = "/health"
+        }
       }
     }
 
@@ -32,5 +40,10 @@ resource "azurerm_container_app" "backend" {
   ingress {
     external_enabled = false
     target_port      = 8080
+
+    traffic_weight {
+      revision_name = "backend"
+      weight        = 100
+    }
   }
 }
