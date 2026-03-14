@@ -1,6 +1,3 @@
-# Variables para la infraestructura de la aplicación
-# Se llenarán luego con nombre de CAE, contenedores, etc.
-
 variable "app_rg_name" {
   description = "Nombre del Resource Group de la aplicación"
   type        = string
@@ -11,4 +8,10 @@ variable "cae_name" {
   description = "Nombre del Container Apps Environment"
   type        = string
   default     = "orders-cae-dev-eus-01"
+}
+
+variable "location" {
+  description = "Región Azure"
+  type        = string
+  default     = "East US"
 }
