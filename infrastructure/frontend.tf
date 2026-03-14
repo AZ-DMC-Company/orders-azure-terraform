@@ -10,6 +10,7 @@ resource "azurerm_container_app" "frontend" {
     transport        = "auto"
 
     traffic_weight {
+      latest_revision = true
       percentage    = 100
     }
   }
