@@ -1,0 +1,56 @@
+name: test-app-deployment
+
+on:
+  workflow_dispatch:
+
+jobs:
+
+  test-app:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Verify Frontend URL
+        id: frontend
+        run: |
+          FRONTEND_URL=$(az containerapp show \
+            --name orders-frontend-dev-01 \
+            --resource-group orders-rg-app-dev-eus-01 \
+            --query properties.configuration.ingress.fqdn -o tsv)
+          echo "Frontend URL: $FRONTEND_URL"
+          # Prueba si responde HTTP 200
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://$FRONTEND_URL)
+          if [ "$STATUS" != "200" ]; then
+            echo "Frontend is not responding correctly!"
+            exit 1
+          fi
+          echo "Frontend is responding correctly."
+          echo "::set-output name=url::$FRONTEND_URL"
+
+      - name: Verify Backend via Container App Exec
+        run: |
+          # Ejecuta un curl interno dentro del backend
+          az containerapp exec \
+            --name orders-backend-dev-01 \
+            --resource-group orders-rg-app-dev-eus-01 \
+            --command "curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/actuator/health" \
+            || (echo "Backend health check failed!" && exit 1)
+          echo "Backend health check passed."
+
+      - name: Test Frontend → Backend Integration
+        run: |
+          FRONTEND_URL=${{ steps.frontend.outputs.url }}
+          # Prueba una llamada que el frontend haga al backend
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" https://$FRONTEND_URL/api/test)
+          if [ "$RESPONSE" != "200" ]; then
+            echo "Frontend cannot reach backend properly!"
+            exit 1
+          fi
+          echo "Frontend and backend integration verified successfully."
