@@ -1,5 +1,5 @@
 resource "azurerm_container_app" "prometheus" {
-  name                         = "${var.workload}-${var.env}-01"
+  name                         = "${var.workload}-prometheus-${var.env}-01"
   resource_group_name          = azurerm_resource_group.rg_app.name
   container_app_environment_id = azurerm_container_app_environment.cae.id
   revision_mode                = "Single"
