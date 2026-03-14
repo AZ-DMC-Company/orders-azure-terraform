@@ -5,6 +5,16 @@ resource "azurerm_container_app" "backend" {
   container_app_environment_id = azurerm_container_app_environment.cae.id
   revision_mode                = "Single"
 
+  ingress {
+    external_enabled = false
+    target_port      = 8080
+    transport        = "Auto"
+
+    traffic_weight {
+      percentage    = 100
+    }
+  }
+
   template {
     container {
       name   = "backend"
@@ -12,16 +22,5 @@ resource "azurerm_container_app" "backend" {
       cpu    = 0.25
       memory = "0.5Gi"
     }
-  }
-
-  ingress {
-    external_enabled = false
-    target_port      = 8080
-    transport        = "Auto"
-
-    traffic {
-      revision_name = "backend"
-      weight        = 100
-    }
-  }
+  } 
 }
