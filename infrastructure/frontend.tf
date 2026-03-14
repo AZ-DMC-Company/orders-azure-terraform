@@ -1,9 +1,9 @@
 resource "azurerm_container_app" "frontend" {
-  name                           = "${var.workload}-frontend-${var.env}-01"
-  resource_group_name            = azurerm_resource_group.rg_app.name
-  location                       = azurerm_resource_group.rg_app.location
-  container_app_environment_id   = azurerm_container_app_environment.cae.id
-  revision_mode                  = "Single"
+  name                         = "${var.workload}-frontend-${var.env}-01"
+  resource_group_name          = azurerm_resource_group.rg_app.name
+  location                     = azurerm_resource_group.rg_app.location
+  container_app_environment_id = azurerm_container_app_environment.cae.id
+  revision_mode                = "Single"
 
   template {
     container {
@@ -11,12 +11,15 @@ resource "azurerm_container_app" "frontend" {
       image  = var.frontend_image
       cpu    = 0.25
       memory = "0.5Gi"
-      probes {
-        type = "Liveness"
-        http_get {
-          path = "/"
-          port = 80
-        }
+
+      liveness_probe {
+        http_get_path = "/"
+        http_get_port = 80
+      }
+
+      readiness_probe {
+        http_get_path = "/"
+        http_get_port = 80
       }
     }
 
@@ -29,11 +32,5 @@ resource "azurerm_container_app" "frontend" {
   ingress {
     external_enabled = true
     target_port      = 80
-    transport        = "Auto"
-
-    traffic {
-      revision_name = "frontend"
-      weight        = 100
-    }
   }
 }
