@@ -27,6 +27,10 @@ jobs:
             --name orders-backend-dev-01 \
             --resource-group orders-rg-app-dev-eus-01 \
             --query properties.configuration.ingress.fqdn -o tsv)" >> $GITHUB_ENV
+          echo "PROMETHEUS_URL=$(az containerapp show \
+            --name orders-prometheus-dev-01 \
+            --resource-group orders-rg-app-dev-eus-01 \
+            --query properties.configuration.ingress.fqdn -o tsv)" >> $GITHUB_ENV          
 
       - name: Test Frontend HTTP response
         run: |
@@ -71,17 +75,10 @@ jobs:
           fi
           echo "Backend health check passed."
 
-      - name: Set Prometheus URL
-        run: |
-          echo "PROMETHEUS_URL=$(az containerapp show \
-            --name orders-prometheus-dev-01 \
-            --resource-group orders-rg-app-dev-eus-01 \
-            --query properties.configuration.ingress.fqdn -o tsv)" >> $GITHUB_ENV          
-
       - name: Test Prometheus HTTP response
         run: |
           echo "Testing Prometheus at $PROMETHEUS_URL ..."
-          STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" https://$PROMETHEUS_URL:9090)
+          STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" https://$PROMETHEUS_URL)
           echo "Prometheus HTTP status: $STATUS_CODE"
           if [ "$STATUS_CODE" -ne 200 ]; then
             echo "Prometheus health check failed!"
