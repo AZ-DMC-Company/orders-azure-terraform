@@ -12,6 +12,7 @@ on:
           - frontend
           - backend
           - prometheus
+          - grafana
 
 jobs:
   restart-ca:
@@ -40,10 +41,15 @@ jobs:
             --name orders-backend-dev-01 \
             --resource-group orders-rg-app-dev-eus-01 \
             --set-env-vars RESTART_TRIGGER=$(date +%s)
-        else
+         elif [ "${{ github.event.inputs.target }}" = "prometheus" ]; then 
           echo "Reiniciando el Prometheus CA..."
           az containerapp update \
             --name orders-prometheus-dev-01 \
             --resource-group orders-rg-app-dev-eus-01 \
             --set-env-vars RESTART_TRIGGER=$(date +%s)
+         else
+          echo "Reiniciando el Grafana CA..."
+          az containerapp delete \
+            --name orders-grafana-dev-01 \
+            --resource-group orders-rg-app-dev-eus-01         
         fi
