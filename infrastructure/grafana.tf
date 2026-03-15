@@ -40,7 +40,7 @@ resource "azurerm_container_app" "grafana" {
 
     volume {
       name          = "grafana-data"
-      storage_name  = azurerm_storage_account.grafana.name
+      storage_name  = azurerm_container_app_environment_storage.cae_storage.name
       storage_type  = "AzureFile"
     }
   }
