@@ -17,6 +17,13 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+      - name: List all Azure resources
+        run: |
+          echo "Listing all resources in the subscription..."
+          az resource list \
+            --query "[].{Name:name, Type:type, ResourceGroup:resourceGroup, Location:location}" \
+            -o table
+
       - name: List Container App Environments
         run: |
           echo "Listing all Container App Environments in the subscription..."
