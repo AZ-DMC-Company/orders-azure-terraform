@@ -32,11 +32,22 @@ jobs:
             --resource-group $RG_NAME \
             -o table
 
-      - name: List availability of MySQLFlexibleServer by selected regions
+      - name: List all Azure locations
+        id: locations
         run: |
-          az mysql flexible-server list-skus --location eastus
-          az mysql flexible-server list-skus --location eastus2  
-          az account list-locations -o table
+          echo "Listing all Azure locations for the subscription..."
+          az account list-locations --query "[].name" -o tsv > regions.txt
+          echo "Regions saved in regions.txt"
+          cat regions.txt
+
+      - name: Loop over regions to list MySQL Flexible Server SKUs
+        run: |
+          echo "Checking MySQL Flexible Server SKUs for each region..."
+          while read region; do
+            echo "======================================"
+            echo "Region: $region"
+            az mysql flexible-server list-skus --location $region || echo "No SKUs available in $region"
+          done < regions.txt
 
       - name: Check Grafana replicas
         run: |
