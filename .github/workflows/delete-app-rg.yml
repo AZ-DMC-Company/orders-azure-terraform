@@ -19,11 +19,11 @@ jobs:
         run: |
           echo "Listing all resources in the RG..."
           az resource list \
-            --resource-group rders-rg-app-dev-eus-01 \
+            --resource-group rders-rg-app-dev-westus2-01 \
             -o table
 
       - name: Delete RG
         run: |
           az group delete \
-            --name orders-rg-app-dev-eus-01 \
+            --name orders-rg-app-dev-westus2-01 \
             --yes --no-wait

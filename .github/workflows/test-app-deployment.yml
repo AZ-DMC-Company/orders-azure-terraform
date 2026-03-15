@@ -33,7 +33,7 @@ jobs:
         run: |
           echo "Checking databases created in MySQL..."
           az mysql flexible-server db list \
-            --resource-group orders-rg-app-dev-eus-01 \
+            --resource-group orders-rg-app-dev-westus2-01 \
             --server-name orders-grafana-db-dev \
             -o table
 
@@ -42,7 +42,7 @@ jobs:
           echo "Checking Grafana replicas and status..."
           az containerapp revision list \
             --name orders-grafana-dev-01 \
-            --resource-group orders-rg-app-dev-eus-01 \
+            --resource-group orders-rg-app-dev-westus2-01 \
             --query "[].{Revision:name, Active:properties.replicas, Running:properties.runningState, Provisioning:properties.provisioningState, Health:properties.healthState}" \
             -o table
 
@@ -51,7 +51,7 @@ jobs:
           echo "Checking IP range Grafana..."
             az containerapp show \
               --name orders-grafana-dev-01 \
-              --resource-group orders-rg-app-dev-eus-01 \
+              --resource-group orders-rg-app-dev-westus2-01 \
               --query properties.configuration.ingress.fqdn -o tsv
 
       - name: Tail Grafana logs
@@ -59,26 +59,26 @@ jobs:
           echo "Streaming Grafana logs..."
           az containerapp logs show \
             --name orders-grafana-dev-01 \
-            --resource-group orders-rg-app-dev-eus-01 \
+            --resource-group orders-rg-app-dev-westus2-01 \
             --tail 200
 
       - name: Set environment variables
         run: |
           echo "FRONTEND_URL=$(az containerapp show \
             --name orders-frontend-dev-01 \
-            --resource-group orders-rg-app-dev-eus-01 \
+            --resource-group orders-rg-app-dev-westus2-01 \
             --query properties.configuration.ingress.fqdn -o tsv)" >> $GITHUB_ENV
           echo "BACKEND_URL=$(az containerapp show \
             --name orders-backend-dev-01 \
-            --resource-group orders-rg-app-dev-eus-01 \
+            --resource-group orders-rg-app-dev-westus2-01 \
             --query properties.configuration.ingress.fqdn -o tsv)" >> $GITHUB_ENV
           echo "PROMETHEUS_URL=$(az containerapp show \
             --name orders-prometheus-dev-01 \
-            --resource-group orders-rg-app-dev-eus-01 \
+            --resource-group orders-rg-app-dev-westus2-01 \
             --query properties.configuration.ingress.fqdn -o tsv)" >> $GITHUB_ENV          
           echo "GRAFANA_URL=$(az containerapp show \
             --name orders-grafana-dev-01 \
-            --resource-group orders-rg-app-dev-eus-01 \
+            --resource-group orders-rg-app-dev-westus2-01 \
             --query properties.configuration.ingress.fqdn -o tsv)" >> $GITHUB_ENV
 
            
@@ -98,7 +98,7 @@ jobs:
           echo "Checking backend replicas..."
           az containerapp revision list \
             --name orders-backend-dev-01 \
-            --resource-group orders-rg-app-dev-eus-01 \
+            --resource-group orders-rg-app-dev-westus2-01 \
             --query "[].{name:name, active:activeReplicas}" \
             -o table
 
@@ -106,7 +106,7 @@ jobs:
         run: |
           STATUS=$(az containerapp show \
             --name orders-backend-dev-01 \
-            --resource-group orders-rg-app-dev-eus-01 \
+            --resource-group orders-rg-app-dev-westus2-01 \
             --query "properties.provisioningState" -o tsv)
           echo "Backend provisioning state: $STATUS"
           if [ "$STATUS" != "Succeeded" ]; then

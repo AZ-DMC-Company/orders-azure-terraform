@@ -6,7 +6,7 @@ on:
       rg_name:
         description: 'Nombre del RG a verificar su eliminación'
         required: true
-        default: 'orders-rg-app-dev-eus-01'
+        default: 'orders-rg-app-dev-westus2-01'
 
 jobs:
   wait:
