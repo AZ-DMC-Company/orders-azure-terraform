@@ -1,6 +1,6 @@
 resource "azurerm_storage_share" "grafana" {
   name               = "grafana"
-  storage_account_name = "orderssttfdev01"  # dev-friendly, v3 todavía soporta esto
+  storage_account_id = azurerm_storage_account.tf_state.id
   quota              = 1
 }
 
@@ -14,11 +14,6 @@ resource "azurerm_container_app" "grafana" {
     external_enabled = true
     target_port      = 3000
     transport        = "auto"
-
-    traffic_weight {
-      latest_revision = true
-      percentage      = 100
-    }    
   }
 
   template {
@@ -28,7 +23,6 @@ resource "azurerm_container_app" "grafana" {
       cpu    = 0.25
       memory = "0.5Gi"
 
-      # Admin clásico
       env {
         name  = "GF_SECURITY_ADMIN_USER"
         value = "admin"
@@ -38,14 +32,15 @@ resource "azurerm_container_app" "grafana" {
         value = "admin123"
       }
 
-      # Volume mount correcto
+      # La clave aquí es `volume_mounts { name = <volume>, path = <mount_path> }`
       volume_mounts {
-        name       = "grafana-data"
-        mount_path = "/var/lib/grafana"
+        name = "grafana-data"
+        path = "/var/lib/grafana"  # <- tu mount path
       }
     }
 
-    volumes {
+    # Define un solo `volume` (no plural `volumes`)
+    volume {
       name = "grafana-data"
 
       azure_file {
