@@ -7,9 +7,9 @@ resource "azurerm_storage_account" "grafana" {
 }
 
 resource "azurerm_storage_share" "grafana" {
-  name                 = "grafana"
-  storage_account_id   = azurerm_storage_account.grafana.id
-  quota                = 1
+  name                        = "grafana"
+  storage_account_name        = azurerm_storage_account.grafana.name
+  quotastorage_account_name   = 1
 }
 
 resource "azurerm_container_app" "grafana" {
@@ -52,11 +52,9 @@ resource "azurerm_container_app" "grafana" {
     }
 
     volume {
-      name         = "grafana-data"
-      storage_type = "AzureFile"
-      azure_file {
-        share_name = azurerm_storage_share.grafana.name
-      }
+      name          = "grafana-data"
+      storage_name  = azurerm_storage_account.grafana.name
+      storage_type  = "AzureFile"
     }
   }
 }
