@@ -14,6 +14,11 @@ resource "azurerm_container_app" "grafana" {
     external_enabled = true
     target_port      = 3000
     transport        = "auto"
+
+    traffic_weight {
+      latest_revision = true
+      percentage    = 100
+    }    
   }
 
   template {
