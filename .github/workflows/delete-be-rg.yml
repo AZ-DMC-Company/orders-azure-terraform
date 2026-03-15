@@ -18,5 +18,5 @@ jobs:
       - name: Delete RG
         run: |
           az group delete \
-            --name orders-rg-tfstate-dev-eus-01 \
+            --name orders-rg-tfstate-dev-westus2-01 \
             --yes --no-wait
