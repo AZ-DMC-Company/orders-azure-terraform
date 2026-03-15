@@ -44,7 +44,7 @@ jobs:
           -var="frontend_image=${{ secrets.FRONTEND_IMAGE_NAME }}:dev" \
           -var="backend_image=${{ secrets.BACKEND_IMAGE_NAME }}:dev" \
           -var="prometheus_image=${{ secrets.PROMETHEUS_IMAGE_NAME }}:dev" \
-          -var="grafana_mysql_password=${{ secrets.GRAFANA_MYSQL_PASSWORD }}" \
+          -var="mysql_password=${{ secrets.MYSQL_PASSWORD }}" \
           -auto-approve
         env:
           ARM_CLIENT_ID: ${{ fromJson(secrets.AZURE_CREDENTIALS).clientId }}
