@@ -33,6 +33,8 @@ jobs:
       - name: Test MySQL connection from runner
         run: |
           echo "Testing MySQL connection..."
+          mysql -h orders-mysqlserver-dev.mysql.database.azure.com -u grafanaadmin@orders-mysqlserver-dev -p 112
+          echo "Testing MySQL connection 2..."
           echo "SELECT NOW();" | mysql \
             -h orders-mysqlserver-dev.mysql.database.azure.com \
             -u grafanaadmin@orders-mysqlserver-dev \
