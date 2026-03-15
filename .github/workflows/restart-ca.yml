@@ -48,9 +48,9 @@ jobs:
             --resource-group orders-rg-app-dev-eus-01 \
             --set-env-vars RESTART_TRIGGER=$(date +%s)
          else
-          echo "Eliminando el Grafana CA..."
-          az containerapp delete \
+          echo "Reiniciando el Grafana CA..."
+          az containerapp update \
             --name orders-grafana-dev-01 \
             --resource-group orders-rg-app-dev-eus-01 \
-            --yes         
+            --set-env-vars RESTART_TRIGGER=$(date +%s)         
         fi

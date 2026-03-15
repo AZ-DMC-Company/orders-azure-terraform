@@ -1,4 +1,4 @@
-name: delete-backend-rg
+name: Delete Terraform backend RG
 
 on:
   workflow_dispatch:

@@ -1,10 +1,10 @@
-name: wait-for-rg-deletion
+name: Verify RG deletion
 
 on:
   workflow_dispatch:
     inputs:
       rg_name:
-        description: 'Nombre del Resource Group a esperar'
+        description: 'Nombre del RG a verificar su eliminación'
         required: true
         default: 'orders-rg-app-dev-eus-01'
 

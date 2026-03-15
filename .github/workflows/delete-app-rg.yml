@@ -1,4 +1,4 @@
-name: delete-app-rg
+name: Delete application RG
 
 on:
   workflow_dispatch:

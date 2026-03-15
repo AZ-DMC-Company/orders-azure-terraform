@@ -1,4 +1,4 @@
-name: terraform-backend-create
+name: Create Terraform backend
 
 on:
   workflow_dispatch:
