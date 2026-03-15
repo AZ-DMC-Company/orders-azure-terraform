@@ -24,12 +24,22 @@ resource "azurerm_container_app" "grafana" {
       memory = "0.5Gi"
 
       env {
+        name  = "GF_SECURITY_ADMIN_USER"
+        value = "admin"
+      }
+      env {
+        name  = "GF_SECURITY_ADMIN_PASSWORD"
+        value = "admin123"
+      }
+
+      # Configuración de MySQL
+      env {
         name  = "GF_DATABASE_TYPE"
         value = "mysql"
       }
       env {
         name  = "GF_DATABASE_HOST"
-        value = azurerm_mysql_flexible_server.grafana_db.fqdn
+        value = "${azurerm_mysql_flexible_server.grafana_db.fqdn}:3306"
       }
       env {
         name  = "GF_DATABASE_NAME"
@@ -37,19 +47,11 @@ resource "azurerm_container_app" "grafana" {
       }
       env {
         name  = "GF_DATABASE_USER"
-        value = "grafanaadmin"
+        value = "${azurerm_mysql_flexible_server.grafana_db.administrator_login}@${azurerm_mysql_flexible_server.grafana_db.name}"
       }
       env {
         name  = "GF_DATABASE_PASSWORD"
         value = var.grafana_mysql_password
-      }
-      env {
-        name  = "GF_SECURITY_ADMIN_USER"
-        value = "admin"
-      }
-      env {
-        name  = "GF_SECURITY_ADMIN_PASSWORD"
-        value = "admin123"
       }
     }
   }
