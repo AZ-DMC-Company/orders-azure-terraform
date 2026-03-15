@@ -32,23 +32,6 @@ jobs:
             --resource-group $RG_NAME \
             -o table
 
-      - name: List all Azure locations
-        id: locations
-        run: |
-          echo "Listing all Azure locations for the subscription..."
-          az account list-locations --query "[].name" -o tsv > regions.txt
-          echo "Regions saved in regions.txt"
-          cat regions.txt
-
-      - name: Loop over regions to list MySQL Flexible Server SKUs
-        run: |
-          echo "Checking MySQL Flexible Server SKUs for each region..."
-          while read region; do
-            echo "======================================"
-            echo "Region: $region"
-            az mysql flexible-server list-skus --location $region || echo "No SKUs available in $region"
-          done < regions.txt
-
       - name: Check Grafana replicas
         run: |
           echo "Checking Grafana replicas and status..."
