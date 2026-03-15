@@ -37,20 +37,13 @@ jobs:
           echo "Checking Grafana replicas and status..."
           az containerapp revision list \
             --name orders-grafana-dev-01 \
-            --resource-group orders-rg-app-dev-eus-01
-
-      - name: Check Grafana replicas
-        run: |
-          echo "Checking Grafana replicas and status..."
-          az containerapp revision list \
-            --name orders-grafana-dev-01 \
             --resource-group orders-rg-app-dev-eus-01 \
-            --query "[].{Revision:name, Active:activeReplicas, Running:runningState, Provisioning:provisioningState, Health:healthState}" \
+            --query "[].{Revision:name, Active:properties.replicas, Running:properties.runningState, Provisioning:properties.provisioningState, Health:properties.healthState}" \
             -o table
 
       - name: Check IP range Grafana
         run: |
-          echo "Checking Grafana replicas and status..."
+          echo "Checking IP range Grafana..."
             az containerapp show \
               --name orders-grafana-dev-01 \
               --resource-group orders-rg-app-dev-eus-01 \
