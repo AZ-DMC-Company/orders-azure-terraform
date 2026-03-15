@@ -48,7 +48,7 @@ jobs:
 
       - name: Get details of a Grafana replica
         run: |
-          echo "Getting details Grafana replicas..."
+          echo "Getting details of a Grafana replica..."
           az containerapp revision show \
             --name orders-grafana-dev-01 \
             --resource-group orders-rg-app-dev-westus2-01 \
