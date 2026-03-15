@@ -34,7 +34,7 @@ jobs:
           echo "Checking databases created in MySQL..."
           az mysql flexible-server db list \
             --resource-group orders-rg-app-dev-westus2-01 \
-            --server-name orders-grafana-db-dev \
+            --server-name orders-mysqlserver-dev \
             -o table
 
       - name: Check Grafana replicas
