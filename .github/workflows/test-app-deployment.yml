@@ -46,6 +46,15 @@ jobs:
             --query "[].{Revision:name, Active:properties.replicas, Running:properties.runningState, Provisioning:properties.provisioningState, Health:properties.healthState}" \
             -o table
 
+      - name: Get details Grafana replicas
+        run: |
+          echo "Getting details Grafana replicas..."
+          az containerapp revision show \
+            --name orders-grafana-dev-01 \
+            --resource-group orders-rg-app-dev-westus2-01 \
+            --revision orders-grafana-dev-01--wut52lj \
+            --query properties.template.containers[0].instanceView
+
       - name: Check IP range Grafana
         run: |
           echo "Checking IP range Grafana..."
