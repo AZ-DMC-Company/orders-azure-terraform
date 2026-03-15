@@ -24,6 +24,12 @@ jobs:
         with:
           terraform_version: 1.6.0
 
+      - name: Terraform Validate
+        run: |
+          cd infrastructure
+          terraform fmt -check
+          terraform validate
+
       - name: Terraform Init
         run: |
           cd infrastructure
