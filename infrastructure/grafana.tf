@@ -20,8 +20,8 @@ resource "azurerm_container_app" "grafana" {
     container {
       name   = "grafana"
       image  = "grafana/grafana:latest"
-      cpu    = 0.25
-      memory = "0.5Gi"
+      cpu    = 0.5
+      memory = "1Gi"
 
       env {
         name  = "GF_SECURITY_ADMIN_USER"
