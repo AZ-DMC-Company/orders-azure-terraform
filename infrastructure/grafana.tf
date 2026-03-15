@@ -1,7 +1,7 @@
 resource "azurerm_storage_share" "grafana" {
-  name                 = "grafana"
-  storage_account_name = "orderssttfdev01" # reutilizamos tu Storage Account de TF
-  quota                = 1                 # GB suficiente para dev académico
+  name               = "grafana"
+  storage_account_name = "orderssttfdev01"  # dev-friendly, v3 todavía soporta esto
+  quota              = 1
 }
 
 resource "azurerm_container_app" "grafana" {
@@ -18,7 +18,7 @@ resource "azurerm_container_app" "grafana" {
     traffic_weight {
       latest_revision = true
       percentage      = 100
-    }
+    }    
   }
 
   template {
@@ -38,19 +38,21 @@ resource "azurerm_container_app" "grafana" {
         value = "admin123"
       }
 
-      # Montamos volumen persistente
-      volume_mount {
+      # Volume mount correcto
+      volume_mounts {
         name       = "grafana-data"
         mount_path = "/var/lib/grafana"
       }
     }
 
-    # Declaramos el volumen apuntando al file share del Storage Account de TF
-    volume {
-      name         = "grafana-data"
-      storage_name = "orderssttfdev01"
-      share_name   = azurerm_storage_share.grafana.name
-      mount_path   = "/var/lib/grafana"
+    volumes {
+      name = "grafana-data"
+
+      azure_file {
+        storage_account_name = azurerm_storage_account.tf_state.name
+        share_name           = azurerm_storage_share.grafana.name
+        read_only            = false
+      }
     }
   }
 }
