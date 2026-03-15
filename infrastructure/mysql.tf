@@ -3,8 +3,7 @@ resource "azurerm_mysql_flexible_server" "mysql_server" {
   resource_group_name = azurerm_resource_group.rg_app.name
   location            = azurerm_resource_group.rg_app.location
   administrator_login    = "grafanaadmin"
-  administrator_password = var.grafana_mysql_password
-  backup_retention_days  = 7
+  administrator_password = var.mysql_password
   sku_name               = "B_Standard_B1ms"
 }
 
