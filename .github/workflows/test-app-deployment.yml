@@ -39,13 +39,29 @@ jobs:
             --name orders-grafana-dev-01 \
             --resource-group orders-rg-app-dev-eus-01
 
+      - name: Check Grafana replicas
+        run: |
+          echo "Checking Grafana replicas and status..."
+          az containerapp revision list \
+            --name orders-grafana-dev-01 \
+            --resource-group orders-rg-app-dev-eus-01 \
+            --query "[].{Revision:name, Active:activeReplicas, Running:runningState, Provisioning:provisioningState, Health:healthState}" \
+            -o table
+
+      - name: Check IP range Grafana
+        run: |
+          echo "Checking Grafana replicas and status..."
+            az containerapp show \
+              --name orders-grafana-dev-01 \
+              --resource-group orders-rg-app-dev-eus-01 \
+              --query properties.configuration.ingress.fqdn -o tsv
+
       - name: Tail Grafana logs
         run: |
           echo "Streaming Grafana logs..."
           az containerapp logs show \
             --name orders-grafana-dev-01 \
             --resource-group orders-rg-app-dev-eus-01 \
-            --follow \
             --tail 200
 
       - name: Set environment variables
