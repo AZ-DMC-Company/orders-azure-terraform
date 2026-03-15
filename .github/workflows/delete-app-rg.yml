@@ -15,6 +15,13 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+      - name: List all RG resources
+        run: |
+          echo "Listing all resources in the RG..."
+          az resource list \
+            --resource-group rders-rg-app-dev-eus-01 \
+            -o table
+
       - name: Delete RG
         run: |
           az group delete \
