@@ -39,19 +39,19 @@ resource "azurerm_container_app" "grafana" {
       }
       env {
         name  = "GF_DATABASE_HOST"
-        value = "${azurerm_mysql_flexible_server.grafana_db.fqdn}:3306"
+        value = "${azurerm_mysql_flexible_server.mysql_server.fqdn}:3306"
       }
       env {
         name  = "GF_DATABASE_NAME"
-        value = "grafana"
+        value = "${azurerm_mysql_flexible_database.grafana_db.name}"
       }
       env {
         name  = "GF_DATABASE_USER"
-        value = "${azurerm_mysql_flexible_server.grafana_db.administrator_login}@${azurerm_mysql_flexible_server.grafana_db.name}"
+        value = "${azurerm_mysql_flexible_server.mysql_server.administrator_login}@${azurerm_mysql_flexible_server.mysql_server.name}"
       }
       env {
         name  = "GF_DATABASE_PASSWORD"
-        value = var.grafana_mysql_password
+        value = var.mysql_password
       }
     }
   }
