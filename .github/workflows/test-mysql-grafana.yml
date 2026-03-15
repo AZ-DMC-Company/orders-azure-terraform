@@ -36,6 +36,6 @@ jobs:
           echo "SELECT NOW();" | mysql \
             -h orders-mysqlserver-dev.mysql.database.azure.com \
             -u grafanaadmin@orders-mysqlserver-dev \
-            -p"${{ secrets.GRAFANA_MYSQL_PASSWORD }}" \
+            -p"${{ secrets.MYSQL_PASSWORD }}" \
             -D grafana \
             --ssl-mode=REQUIRED
