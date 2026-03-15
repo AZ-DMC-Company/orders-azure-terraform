@@ -29,14 +29,12 @@ jobs:
           echo "Listing all Container App Environments in the subscription..."
           az containerapp env list -o table
 
-      - name: List Storage in specific CA Environment
+      - name: Check databases created in MySQL
         run: |
-          ENV_NAME="orders-env-dev-01"
-          RG_NAME="orders-rg-app-dev-eus-01"
-          echo "Listing Managed Environment Storage for $ENV_NAME..."
-          az containerapp env storage list \
-            --name $ENV_NAME \
-            --resource-group $RG_NAME \
+          echo "Checking databases created in MySQL..."
+          az mysql flexible-server db list \
+            --resource-group orders-rg-app-dev-eus-01 \
+            --server-name orders-grafana-db-dev \
             -o table
 
       - name: Check Grafana replicas
