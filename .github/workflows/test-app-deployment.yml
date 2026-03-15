@@ -42,10 +42,11 @@ jobs:
       - name: Tail Grafana logs
         run: |
           echo "Streaming Grafana logs..."
-          timeout 30s az containerapp logs show \
+          az containerapp logs show \
             --name orders-grafana-dev-01 \
             --resource-group orders-rg-app-dev-eus-01 \
-            --follow      
+            --follow \
+            --tail 200
 
       - name: Set environment variables
         run: |
