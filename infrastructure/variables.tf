@@ -15,7 +15,7 @@ variable "prometheus_image" {
 
 variable "location" {
   type    = string
-  default = "East US"
+  default = "westus2"
 }
 
 variable "env" {

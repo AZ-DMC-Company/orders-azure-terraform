@@ -16,12 +16,12 @@ provider "azurerm" {
 locals {
   workload = "orders"
   env      = "dev"
-  region   = "eus"
+  region   = "westus2"
 }
 
 resource "azurerm_resource_group" "rg_tf_state" {
   name     = "${local.workload}-rg-tfstate-${local.env}-${local.region}-01"
-  location = "East US"
+  location = "westus2"
 }
 
 resource "azurerm_storage_account" "tf_state" {
