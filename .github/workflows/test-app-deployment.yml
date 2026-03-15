@@ -17,6 +17,21 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+      - name: List Container App Environments
+        run: |
+          echo "Listing all Container App Environments in the subscription..."
+          az containerapp env list -o table
+
+      - name: List Storage in specific CA Environment
+        run: |
+          ENV_NAME="orders-env-dev-01"
+          RG_NAME="orders-rg-app-dev-eus-01"
+          echo "Listing Managed Environment Storage for $ENV_NAME..."
+          az containerapp env storage list \
+            --name $ENV_NAME \
+            --resource-group $RG_NAME \
+            -o table
+
       - name: Set environment variables
         run: |
           echo "FRONTEND_URL=$(az containerapp show \
