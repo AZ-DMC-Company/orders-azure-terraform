@@ -51,6 +51,6 @@ jobs:
           echo "Eliminando el Grafana CA..."
           az containerapp delete \
             --name orders-grafana-dev-01 \
-            --resource-group orders-rg-app-dev-eus-01
+            --resource-group orders-rg-app-dev-eus-01 \
             --yes         
         fi
