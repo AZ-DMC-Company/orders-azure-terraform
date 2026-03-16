@@ -48,9 +48,9 @@ jobs:
         run: |
             echo "Getting firewall rules MySQL..."    
             az mysql flexible-server firewall-rule list \
-                --resource-group orders-rg-app-dev-westus2-01 \
-                --server-name orders-mysqlserver-dev -o table
-                
+            --resource-group orders-rg-app-dev-westus2-01 \
+            --name orders-mysqlserver-dev -o table
+
       - name: Reset password MySQL
         run: |
             echo "Resetting password MySQL..."         
