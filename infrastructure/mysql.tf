@@ -3,7 +3,7 @@ resource "azurerm_mysql_flexible_server" "mysql_server" {
   resource_group_name = azurerm_resource_group.rg_app.name
   location            = azurerm_resource_group.rg_app.location
   administrator_login    = "mysqladmin"
-  administrator_password = var.mysql_password
+  administrator_password = "H@Sh1CoR3!"
   sku_name               = "B_Standard_B1ms"
 }
 
