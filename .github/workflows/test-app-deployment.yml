@@ -29,35 +29,27 @@ jobs:
           echo "Listing all Container App Environments in the subscription..."
           az containerapp env list -o table
 
-      - name: Check databases created in MySQL
+      - name: Check MySQL status
         run: |
-          echo "Checking databases created in MySQL..."
+            echo "Checking MySQL status..."         
+            az mysql flexible-server show \
+              --resource-group orders-rg-app-dev-westus2-01 \
+              --name orders-mysqlserver-dev -o table
+
+      - name: Check MySQL databases 
+        run: |
+          echo "Checking MySQL databases..."
           az mysql flexible-server db list \
             --resource-group orders-rg-app-dev-westus2-01 \
             --server-name orders-mysqlserver-dev \
             -o table
 
-      - name: Check info of MySQL
+      - name: Get MySQL firewall rules
         run: |
-            echo "Checking info of MySQL..."         
-            az mysql flexible-server show \
-              --resource-group orders-rg-app-dev-westus2-01 \
-              --name orders-mysqlserver-dev
-
-      - name: Get firewall rules MySQL
-        run: |
-            echo "Getting firewall rules MySQL..."    
+            echo "Getting MySQL firewall rules..."    
             az mysql flexible-server firewall-rule list \
             --resource-group orders-rg-app-dev-westus2-01 \
             --name orders-mysqlserver-dev -o table
-
-      - name: Reset password MySQL
-        run: |
-            echo "Resetting password MySQL..."         
-            az mysql flexible-server update \
-                --resource-group orders-rg-app-dev-westus2-01 \
-                --name orders-mysqlserver-dev \
-                --admin-password MySimplePass123  
 
       - name: Check Grafana replicas
         run: |
@@ -68,14 +60,6 @@ jobs:
             --query "[].{Revision:name, Active:properties.replicas, Running:properties.runningState, Provisioning:properties.provisioningState, Health:properties.healthState}" \
             -o table
 
-      - name: Get details of a Grafana replica
-        run: |
-          echo "Getting details of a Grafana replica..."
-          az containerapp revision show \
-            --name orders-grafana-dev-01 \
-            --resource-group orders-rg-app-dev-westus2-01 \
-            --revision orders-grafana-dev-01--wut52lj
-
       - name: Check IP range Grafana
         run: |
           echo "Checking IP range Grafana..."
@@ -84,9 +68,9 @@ jobs:
               --resource-group orders-rg-app-dev-westus2-01 \
               --query properties.configuration.ingress.fqdn -o tsv
 
-      - name: Tail Grafana logs
+      - name: Get Grafana CA latest logs
         run: |
-          echo "Streaming Grafana logs..."
+          echo "Getting Grafana CA latest logs..."
           az containerapp logs show \
             --name orders-grafana-dev-01 \
             --resource-group orders-rg-app-dev-westus2-01 \
