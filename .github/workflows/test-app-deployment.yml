@@ -60,13 +60,6 @@ jobs:
             --query "[].{Revision:name, Active:properties.replicas, Running:properties.runningState, Provisioning:properties.provisioningState, Health:properties.healthState}" \
             -o table
 
-      - name: Check IP range Grafana
-        run: |
-          echo "Checking IP range Grafana..."
-            az containerapp show \
-              --name orders-grafana-dev-01 \
-              --resource-group orders-rg-app-dev-westus2-01 \
-              --query properties.configuration.ingress.fqdn -o tsv
 
       - name: Get Grafana CA latest logs
         run: |
