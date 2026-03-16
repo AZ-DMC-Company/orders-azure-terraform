@@ -153,7 +153,7 @@ jobs:
       - name: Test Grafana HTTP response
         run: |
           echo "Testing Grafana at $GRAFANA_URL ..."
-          STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" https://$GRAFANA_URL)
+          STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" https://$GRAFANA_URL/login)
           echo "Grafana HTTP status: $STATUS_CODE"
           if [ "$STATUS_CODE" -ne 200 ]; then
             echo "Grafana health check failed!"

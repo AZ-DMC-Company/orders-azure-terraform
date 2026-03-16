@@ -24,3 +24,10 @@ resource "azurerm_mysql_flexible_server_firewall_rule" "allow_all" {
   start_ip_address = "0.0.0.0"
   end_ip_address   = "255.255.255.255"
 }
+
+resource "azurerm_mysql_flexible_server_configuration" "disable_ssl" {
+  name                = "require_secure_transport"
+  resource_group_name = azurerm_mysql_flexible_server.mysql_server.resource_group_name
+  server_name         = azurerm_mysql_flexible_server.mysql_server.name
+  value               = "OFF"
+}
