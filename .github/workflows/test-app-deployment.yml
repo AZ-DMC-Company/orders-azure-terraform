@@ -57,7 +57,7 @@ jobs:
             az mysql flexible-server update \
                 --resource-group orders-rg-app-dev-westus2-01 \
                 --name orders-mysqlserver-dev \
-                --admin-password ChangeMe123  
+                --admin-password MySimplePass123  
 
       - name: Check Grafana replicas
         run: |
