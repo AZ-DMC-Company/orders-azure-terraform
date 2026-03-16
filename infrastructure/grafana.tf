@@ -47,15 +47,15 @@ resource "azurerm_container_app" "grafana" {
       }
       env {
         name  = "GF_DATABASE_USER"
-        value = "${azurerm_mysql_flexible_server.mysql_server.administrator_login}@${azurerm_mysql_flexible_server.mysql_server.name}"
+        value = "${azurerm_mysql_flexible_server.mysql_server.administrator_login}
       }
       env {
         name  = "GF_DATABASE_PASSWORD"
         value = var.mysql_password
       }
       env {
-        name  = "GF_LOG_LEVEL"
-        value = "debug"
+        name  = "GF_DATABASE_SSL_MODE"
+        value = "require"
       }
     }
   }
