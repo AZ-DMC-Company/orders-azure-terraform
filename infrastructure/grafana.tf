@@ -57,10 +57,6 @@ resource "azurerm_container_app" "grafana" {
         name  = "GF_DATABASE_PASSWORD"
         value = var.mysql_password
       }
-      env {
-        name  = "GF_DATABASE_SSL_MODE"
-        value = "require"
-      }
     }
   }
 }
