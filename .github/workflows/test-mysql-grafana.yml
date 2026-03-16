@@ -25,6 +25,15 @@ jobs:
             --server-name orders-mysqlserver-dev \
             -o table
 
+      - name: Disable SSL in MySQL
+        run: |
+          echo "Disabling SSL in MySQL..."
+          az mysql flexible-server parameter set \
+            --resource-group orders-rg-app-dev-westus2-01 \
+            --server-name orders-mysqlserver-dev \
+            --name require_secure_transport \
+            --value OFF
+
       - name: Install MySQL client
         run: |
           sudo apt-get update
@@ -35,7 +44,7 @@ jobs:
           echo "Testing MySQL connection..."
           echo "SELECT NOW();" | mysql \
             -h orders-mysqlserver-dev.mysql.database.azure.com \
-            -u grafanaadmin@orders-mysqlserver-dev \
+            -u grafanaadmin \
             -p"${{ secrets.MYSQL_PASSWORD }}" \
             -D grafana \
             --ssl-mode=REQUIRED
