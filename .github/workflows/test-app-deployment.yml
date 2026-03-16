@@ -39,10 +39,20 @@ jobs:
 
       - name: Check info of MySQL
         run: |
-          echo "Checking info of MySQL..."         
+            echo "Checking info of MySQL..."         
             az mysql flexible-server show \
               --resource-group orders-rg-app-dev-westus2-01 \
               --name orders-mysqlserver-dev
+
+      - name: Reset password MySQL
+        run: |
+            echo "Resetting password MySQL..."         
+            az mysql flexible-server update \
+                --resource-group orders-rg-app-dev-westus2-01 \
+                --name orders-mysqlserver-dev \
+                --admin-password ChangeMe123  
+
+            
 
       - name: Check Grafana replicas
         run: |
