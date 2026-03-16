@@ -37,6 +37,13 @@ jobs:
             --server-name orders-mysqlserver-dev \
             -o table
 
+      - name: Check info of MySQL
+        run: |
+          echo "Checking info of MySQL..."         
+            az mysql flexible-server show \
+              --resource-group orders-rg-app-dev-westus2-01 \
+              --name orders-mysqlserver-dev
+
       - name: Check Grafana replicas
         run: |
           echo "Checking Grafana replicas and status..."
