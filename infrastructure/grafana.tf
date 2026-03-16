@@ -39,7 +39,11 @@ resource "azurerm_container_app" "grafana" {
       }
       env {
         name  = "GF_DATABASE_HOST"
-        value = "${azurerm_mysql_flexible_server.mysql_server.fqdn}:3306"
+        value = "${azurerm_mysql_flexible_server.mysql_server.fqdn}"
+      }
+      env {
+        name  = "GF_DATABASE_PORT"
+        value = "3306"
       }
       env {
         name  = "GF_DATABASE_NAME"
