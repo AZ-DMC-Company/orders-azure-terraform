@@ -44,6 +44,7 @@ jobs:
           -var="frontend_image=${{ secrets.FRONTEND_IMAGE_NAME }}:dev" \
           -var="backend_image=${{ secrets.BACKEND_IMAGE_NAME }}:dev" \
           -var="prometheus_image=${{ secrets.PROMETHEUS_IMAGE_NAME }}:dev" \
+          -var="mysql_url=${{ secrets.MYSQL_URL }}" \
           -var="mysql_user=${{ secrets.MYSQL_USER }}" \
           -var="mysql_password=${{ secrets.MYSQL_PASSWORD }}" \
           -var="grafana_user=${{ secrets.GRAFANA_USER }}" \
