@@ -28,6 +28,11 @@ variable "workload" {
   default = "orders"
 }
 
+variable "mysql_url" {
+  description = "URL for MySQL"
+  type        = string
+}
+
 variable "mysql_user" {
   description = "User for MySQL admin"
   type        = string
