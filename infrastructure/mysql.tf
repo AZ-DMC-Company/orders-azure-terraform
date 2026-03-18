@@ -15,6 +15,14 @@ resource "azurerm_mysql_flexible_database" "grafana_db" {
   collation           = "utf8mb4_general_ci"
 }
 
+resource "azurerm_mysql_flexible_database" "orders_db" {
+  name                = "orders_db"
+  resource_group_name = azurerm_resource_group.rg_app.name
+  server_name         = azurerm_mysql_flexible_server.mysql_server.name
+  charset             = "utf8mb4"
+  collation           = "utf8mb4_general_ci"
+}
+
 resource "azurerm_mysql_flexible_server_firewall_rule" "allow_all" {
   name                = "allow-all"
   resource_group_name = azurerm_resource_group.rg_app.name
