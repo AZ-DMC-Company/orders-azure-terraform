@@ -25,11 +25,11 @@ resource "azurerm_container_app" "grafana" {
 
       env {
         name  = "GF_SECURITY_ADMIN_USER"
-        value = "admin"
+        value = var.grafana_user
       }
       env {
         name  = "GF_SECURITY_ADMIN_PASSWORD"
-        value = "admin123"
+        value = var.grafana_password
       }
 
       # Configuración de MySQL

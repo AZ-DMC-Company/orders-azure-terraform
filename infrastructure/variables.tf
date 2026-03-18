@@ -28,8 +28,24 @@ variable "workload" {
   default = "orders"
 }
 
+variable "mysql_user" {
+  description = "User for MySQL admin"
+  type        = string
+}
+
 variable "mysql_password" {
   description = "Password for MySQL admin"
+  type        = string
+  sensitive   = true
+}
+
+variable "grafana_user" {
+  description = "User for Grafana admin"
+  type        = string
+}
+
+variable "grafana_password" {
+  description = "Password for Grafana admin"
   type        = string
   sensitive   = true
 }
