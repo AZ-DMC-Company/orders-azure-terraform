@@ -21,6 +21,19 @@ resource "azurerm_container_app" "backend" {
       image  = var.backend_image
       cpu    = 0.25
       memory = "0.5Gi"
+
+      env {
+        name  = "MYSQL_URL"
+        value = var.mysql_url  
+      }
+      env {
+        name  = "MYSQL_USER"
+        value = var.mysql_user 
+      }
+      env {
+        name  = "MYSQL_PASSWORD"
+        value = var.mysql_password
+      }
     }
   } 
 }
