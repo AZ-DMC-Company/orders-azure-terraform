@@ -69,6 +69,14 @@ jobs:
             --resource-group orders-rg-app-dev-westus2-01 \
             --tail 200
 
+      - name: Get Backend CA latest logs
+        run: |
+          echo "Getting Backend CA latest logs..."
+          az containerapp logs show \
+            --name orders-backend-dev-01 \
+            --resource-group orders-rg-app-dev-westus2-01 \
+            --tail 200            
+
       - name: Set environment variables
         run: |
           echo "FRONTEND_URL=$(az containerapp show \
