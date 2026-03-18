@@ -72,11 +72,11 @@ jobs:
       - name: Get backend CA environment variables
         run: |
           echo "Getting backend CA environment variables..."
-          az containerapp exec \
+          az containerapp show \
             --name orders-backend-dev-01 \
             --resource-group orders-rg-app-dev-westus2-01 \
-            --container backend \
-            --command "env | grep MYSQL"
+            --query "properties.template.containers[0].env" \
+            -o json
 
       - name: Get Backend CA latest logs
         run: |
