@@ -21,6 +21,11 @@ resource "azurerm_container_app" "frontend" {
       image  = var.frontend_image
       cpu    = 0.25
       memory = "0.5Gi"
+
+      env {
+        name  = "BACKEND_URL"
+        value = "https://${azurerm_container_app.backend.latest_revision_fqdn}/orders"
+      }
     }
   }
 }
