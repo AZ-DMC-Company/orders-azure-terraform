@@ -29,6 +29,51 @@ jobs:
           echo "Listing all Container App Environments in the subscription..."
           az containerapp env list -o table
 
+      - name: Check Prometheus CA provisioning state
+        run: |
+          echo "Checking Prometheus Container App status..."
+          az containerapp show \
+            --name orders-prometheus-dev-01 \
+            --resource-group orders-rg-app-dev-westus2-01 \
+            --query "{Status:properties.provisioningState, Replicas:properties.template.replicas, ActiveRevision:properties.latestRevisionName}" \
+            -o table
+
+      - name: List Prometheus CA revisions
+        run: |
+          echo "Listing Prometheus CA revisions..."
+          az containerapp revision list \
+            --name orders-prometheus-dev-01 \
+            --resource-group orders-rg-app-dev-westus2-01 \
+            --query "[].{Name:name, Active:active, Replicas:properties.replicas, ProvisioningState:properties.provisioningState}" \
+            -o table
+
+      - name: Check Prometheus CA environment variables
+        run: |
+          echo "Checking Prometheus CA environment variables..."
+          az containerapp show \
+            --name orders-prometheus-dev-01 \
+            --resource-group orders-rg-app-dev-westus2-01 \
+            --query "properties.template.containers[0].env" \
+            -o json
+
+      - name: Get Prometheus CA logs
+        run: |
+          REVISION=$(az containerapp revision list \
+            --name orders-prometheus-dev-01 \
+            --resource-group orders-rg-app-dev-westus2-01 \
+            --query "[?active].name | [0]" -o tsv)
+
+          if [ -z "$REVISION" ]; then
+            echo "No active revision found, cannot show logs yet."
+          else
+            echo "Showing logs for revision $REVISION..."
+            az containerapp logs show \
+              --name orders-prometheus-dev-01 \
+              --resource-group orders-rg-app-dev-westus2-01 \
+              --revision $REVISION \
+              --tail 200
+          fi
+
       - name: Check MySQL status
         run: |
             echo "Checking MySQL status..."         
@@ -85,14 +130,6 @@ jobs:
             --name orders-backend-dev-01 \
             --resource-group orders-rg-app-dev-westus2-01 \
             --tail 200            
-
-      - name: Get Prometheus CA latest logs
-        run: |
-          echo "Getting Prometheus CA latest logs..."
-          az containerapp logs show \
-            --name orders-prometheus-dev-01 \
-            --resource-group orders-rg-app-dev-westus2-01 \
-            --tail 200      
 
       - name: Set environment variables
         run: |
