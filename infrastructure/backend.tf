@@ -11,7 +11,7 @@ resource "azurerm_container_app" "backend" {
 
     traffic_weight {
       latest_revision = true
-      percentage    = 100
+      percentage      = 100
     }
   }
 
@@ -33,10 +33,6 @@ resource "azurerm_container_app" "backend" {
       env {
         name  = "MYSQL_PASSWORD"
         value = var.mysql_password
-      }
-      env {
-        name  = "FRONTEND_URL"
-        value = "https://${azurerm_container_app.frontend.latest_revision_fqdn}"
       }
     }
   } 

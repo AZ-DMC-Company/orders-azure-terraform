@@ -11,9 +11,14 @@ resource "azurerm_container_app" "frontend" {
 
     traffic_weight {
       latest_revision = true
-      percentage    = 100
+      percentage      = 100
     }
   }
+
+  # 🔹 Esto asegura que frontend se cree **después del backend**
+  depends_on = [
+    azurerm_container_app.backend
+  ]
 
   template {
     container {
@@ -22,6 +27,7 @@ resource "azurerm_container_app" "frontend" {
       cpu    = 0.25
       memory = "0.5Gi"
 
+      # ✅ Variable de entorno dinámica apuntando al backend
       env {
         name  = "BACKEND_URL"
         value = "https://${azurerm_container_app.backend.latest_revision_fqdn}/orders"
