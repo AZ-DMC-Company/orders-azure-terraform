@@ -21,6 +21,15 @@ resource "azurerm_container_app" "prometheus" {
       image  = var.prometheus_image
       cpu    = 0.25
       memory = "0.5Gi"
+
+      env {
+        name  = "BACKEND_URL"
+        value = "https://${azurerm_container_app.backend.latest_revision_fqdn}/actuator/prometheus"
+      }
     }
   }
+
+  depends_on = [
+    azurerm_container_app.backend
+  ]
 }
