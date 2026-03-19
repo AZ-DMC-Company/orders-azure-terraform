@@ -24,8 +24,8 @@ resource "azurerm_container_app" "frontend" {
     container {
       name   = "frontend"
       image  = var.frontend_image
-      cpu    = 0.5
-      memory = "1.0Gi"
+      cpu    = 0.25
+      memory = "0.5Gi"
 
       # ✅ Variable de entorno dinámica apuntando al backend
       env {
