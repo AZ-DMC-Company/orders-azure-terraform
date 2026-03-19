@@ -86,6 +86,14 @@ jobs:
             --resource-group orders-rg-app-dev-westus2-01 \
             --tail 200            
 
+      - name: Get Prometheus CA latest logs
+        run: |
+          echo "Getting Prometheus CA latest logs..."
+          az containerapp logs show \
+            --name orders-prometheus-dev-01 \
+            --resource-group orders-rg-app-dev-westus2-01 \
+            --tail 200      
+
       - name: Set environment variables
         run: |
           echo "FRONTEND_URL=$(az containerapp show \
@@ -141,13 +149,22 @@ jobs:
       - name: Test Backend HTTP response
         run: |
           echo "Testing backend at $BACKEND_URL ..."
-          STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" https://$BACKEND_URL/actuator/health)
-          echo "Backend HTTP status: $STATUS_CODE"
-          if [ "$STATUS_CODE" -ne 200 ]; then
-            echo "Backend health check failed!"
-            exit 1
-          fi
-          echo "Backend health check passed."
+          
+          MAX_RETRIES=10
+          SLEEP=5
+          
+          for i in $(seq 1 $MAX_RETRIES); do
+            STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" https://$BACKEND_URL/actuator/health)
+            if [ "$STATUS_CODE" -eq 200 ]; then
+              echo "Backend health check passed."
+              exit 0
+            fi
+            echo "Attempt $i/$MAX_RETRIES: Backend not ready yet (status $STATUS_CODE), retrying in $SLEEP sec..."
+            sleep $SLEEP
+          done
+
+          echo "Backend health check failed after $MAX_RETRIES attempts!"
+          exit 1
 
       - name: Test Prometheus HTTP response
         run: |
