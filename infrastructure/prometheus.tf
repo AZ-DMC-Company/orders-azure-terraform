@@ -11,20 +11,20 @@ resource "azurerm_container_app" "prometheus" {
 
     traffic_weight {
       latest_revision = true
-      percentage    = 100
-    }    
+      percentage      = 100
+    }
   }
 
   template {
     container {
       name   = "prometheus"
       image  = var.prometheus_image
-      cpu    = 0.25
-      memory = "0.5Gi"
+      cpu    = 0.5
+      memory = "1Gi"
 
       env {
         name  = "BACKEND_URL"
-        value = "https://${azurerm_container_app.backend.latest_revision_fqdn}"
+        value = "https://${azurerm_container_app.backend.latest_revision_fqdn}/actuator/prometheus"
       }
     }
   }
