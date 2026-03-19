@@ -19,8 +19,8 @@ resource "azurerm_container_app" "prometheus" {
     container {
       name   = "prometheus"
       image  = var.prometheus_image
-      cpu    = 0.5
-      memory = "1Gi"
+      cpu    = 0.25
+      memory = "0.50Gi"
 
       env {
         name  = "BACKEND_URL"
