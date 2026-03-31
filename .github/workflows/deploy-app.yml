@@ -49,6 +49,7 @@ jobs:
           -var="mysql_password=${{ secrets.MYSQL_PASSWORD }}" \
           -var="grafana_user=${{ secrets.GRAFANA_USER }}" \
           -var="grafana_password=${{ secrets.GRAFANA_PASSWORD }}" \
+          -var="jwt_secret=${{ secrets.JWT_SECRET }}" \
           -auto-approve
         env:
           ARM_CLIENT_ID: ${{ fromJson(secrets.AZURE_CREDENTIALS).clientId }}
