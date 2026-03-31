@@ -74,16 +74,6 @@ jobs:
               --tail 200
           fi            
 
-      - name: Get Backend CA logs (by specific replica)
-        run: |
-          echo "Getting Backend CA logs (by specific replica)..."
-          az containerapp logs show \
-            --name orders-backend-dev-01 \
-            --resource-group orders-rg-app-dev-westus2-01 \
-            --revision orders-backend-dev-01--0000006 \
-            --tail 200
-
-
       - name: Check Prometheus CA provisioning state
         run: |
           echo "Checking Prometheus Container App status..."
