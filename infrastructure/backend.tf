@@ -34,6 +34,10 @@ resource "azurerm_container_app" "backend" {
         name  = "MYSQL_PASSWORD"
         value = var.mysql_password
       }
+      env {
+        name  = "JWT_SECRET"
+        value = var.jwt_secret
+      }
     }
   } 
 }

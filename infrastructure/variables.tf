@@ -54,3 +54,8 @@ variable "grafana_password" {
   type        = string
   sensitive   = true
 }
+
+variable "jwt_secret" {
+  description = "Secret for JWT"
+  type        = string
+}
