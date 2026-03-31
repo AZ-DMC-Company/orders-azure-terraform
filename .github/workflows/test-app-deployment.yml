@@ -45,7 +45,7 @@ jobs:
             --name orders-backend-dev-01 \
             --resource-group orders-rg-app-dev-westus2-01 \
             --query "[].{Name:name, Active:active, Replicas:properties.replicas, ProvisioningState:properties.provisioningState}" \
-            -o tables
+            -o table
 
       - name: Check Prometheus CA provisioning state
         run: |
