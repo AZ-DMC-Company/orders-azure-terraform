@@ -35,7 +35,6 @@ jobs:
       - name: Terraform Validate
         run: |
           cd infrastructure
-          terraform force-unlock -force 162e8bc6-e2e1-41da-af26-d5dc217ec5e4
           terraform validate
 
       - name: Terraform Apply
