@@ -29,6 +29,24 @@ jobs:
           echo "Listing all Container App Environments in the subscription..."
           az containerapp env list -o table
 
+      - name: Check Backend CA provisioning state
+        run: |
+          echo "Checking Backend Container App status..."
+          az containerapp show \
+            --name orders-backend-dev-01 \
+            --resource-group orders-rg-app-dev-westus2-01 \
+            --query "{Status:properties.provisioningState, Replicas:properties.template.replicas, ActiveRevision:properties.latestRevisionName}" \
+            -o table
+
+      - name: List Backend CA revisions
+        run: |
+          echo "Listing Backend CA revisions..."
+          az containerapp revision list \
+            --name orders-backend-dev-01 \
+            --resource-group orders-rg-app-dev-westus2-01 \
+            --query "[].{Name:name, Active:active, Replicas:properties.replicas, ProvisioningState:properties.provisioningState}" \
+            -o tables
+
       - name: Check Prometheus CA provisioning state
         run: |
           echo "Checking Prometheus Container App status..."
