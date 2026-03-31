@@ -29,6 +29,15 @@ jobs:
           echo "Listing all Container App Environments in the subscription..."
           az containerapp env list -o table
 
+      - name: Get backend CA environment variables
+        run: |
+          echo "Getting backend CA environment variables..."
+          az containerapp show \
+            --name orders-backend-dev-01 \
+            --resource-group orders-rg-app-dev-westus2-01 \
+            --query "properties.template.containers[0].env" \
+            -o json
+            
       - name: Check Backend CA provisioning state
         run: |
           echo "Checking Backend Container App status..."
@@ -46,6 +55,24 @@ jobs:
             --resource-group orders-rg-app-dev-westus2-01 \
             --query "[].{Name:name, Active:active, Replicas:properties.replicas, ProvisioningState:properties.provisioningState}" \
             -o table
+
+      - name: Get Backend CA logs
+        run: |
+          REVISION=$(az containerapp revision list \
+            --name orders-backend-dev-01 \
+            --resource-group orders-rg-app-dev-westus2-01 \
+            --query "[?active].name | [0]" -o tsv)
+
+          if [ -z "$REVISION" ]; then
+            echo "No active revision found, cannot show logs yet."
+          else
+            echo "Showing logs for revision $REVISION..."
+            az containerapp logs show \
+              --name orders-backend-dev-01 \
+              --resource-group orders-rg-app-dev-westus2-01 \
+              --revision $REVISION \
+              --tail 200
+          fi            
 
       - name: Check Prometheus CA provisioning state
         run: |
@@ -132,36 +159,6 @@ jobs:
             --resource-group orders-rg-app-dev-westus2-01 \
             --tail 200
 
-      - name: Get backend CA environment variables
-        run: |
-          echo "Getting backend CA environment variables..."
-          az containerapp show \
-            --name orders-backend-dev-01 \
-            --resource-group orders-rg-app-dev-westus2-01 \
-            --query "properties.template.containers[0].env" \
-            -o json
-
-      - name: Get Backend CA logs (safe)
-        run: |
-          echo "Getting backend logs..."
-          REPLICAS=$(az containerapp show \
-            --name orders-backend-dev-01 \
-            --resource-group orders-rg-app-dev-westus2-01 \
-            --query "properties.template.replicas" -o tsv)
-
-          if [ "$REPLICAS" -gt 0 ]; then
-            az containerapp logs show \
-              --name orders-backend-dev-01 \
-              --resource-group orders-rg-app-dev-westus2-01 \
-              --tail 200
-          else
-            echo "No active replicas. Showing system logs..."
-            az containerapp logs show \
-              --name orders-backend-dev-01 \
-              --resource-group orders-rg-app-dev-westus2-01 \
-              --type system \
-              --tail 200
-          fi         
 
       - name: Set environment variables
         run: |
