@@ -29,6 +29,51 @@ jobs:
           echo "Listing all Container App Environments in the subscription..."
           az containerapp env list -o table
 
+      - name: Get Frontend CA environment variables
+        run: |
+          echo "Getting frontend CA environment variables..."
+          az containerapp show \
+            --name orders-frontend-dev-01 \
+            --resource-group orders-rg-app-dev-westus2-01 \
+            --query "properties.template.containers[0].env" \
+            -o json
+
+      - name: Check Frontend CA provisioning state
+        run: |
+          echo "Checking frontend Container App status..."
+          az containerapp show \
+            --name orders-frontend-dev-01 \
+            --resource-group orders-rg-app-dev-westus2-01 \
+            --query "{Status:properties.provisioningState, Replicas:properties.template.replicas, ActiveRevision:properties.latestRevisionName}" \
+            -o table
+
+      - name: List Frontend CA revisions
+        run: |
+          echo "Listing frontend CA revisions..."
+          az containerapp revision list \
+            --name orders-frontend-dev-01 \
+            --resource-group orders-rg-app-dev-westus2-01 \
+            --query "[].{Name:name, Active:active, Replicas:properties.replicas, ProvisioningState:properties.provisioningState}" \
+            -o table
+
+      - name: Get Frontend CA logs
+        run: |
+          REVISION=$(az containerapp revision list \
+            --name orders-frontend-dev-01 \
+            --resource-group orders-rg-app-dev-westus2-01 \
+            --query "[?active].name | [0]" -o tsv)
+
+          if [ -z "$REVISION" ]; then
+            echo "No active revision found, cannot show logs yet."
+          else
+            echo "Showing logs for revision $REVISION..."
+            az containerapp logs show \
+              --name orders-frontend-dev-01 \
+              --resource-group orders-rg-app-dev-westus2-01 \
+              --revision $REVISION \
+              --tail 200
+          fi                
+
       - name: Get backend CA environment variables
         run: |
           echo "Getting backend CA environment variables..."
