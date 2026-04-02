@@ -30,15 +30,8 @@ resource "azurerm_container_app" "frontend" {
       # ✅ Variable de entorno dinámica apuntando al backend
       env {
         name  = "BACKEND_URL"
-        value = "https://${azurerm_container_app.backend.fqdn}/"
+        value = "https://${azurerm_container_app.backend.latest_revision_fqdn}/"
       }
     }
-  }
-
-  lifecycle {
-    # 🔹 Esto evita errores por FQDN dinámico
-    ignore_changes = [
-      template[0].container[0].env[0].value
-    ]
   }
 }
