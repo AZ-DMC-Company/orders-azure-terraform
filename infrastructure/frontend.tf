@@ -30,7 +30,7 @@ resource "azurerm_container_app" "frontend" {
       # ✅ Variable de entorno dinámica apuntando al backend
       env {
         name  = "BACKEND_URL"
-        value = azurerm_container_app.backend.latest_revision_fqdn
+        value = "https://${azurerm_container_app.backend.configuration[0].ingress[0].fqdn}/"
       }
     }
   }

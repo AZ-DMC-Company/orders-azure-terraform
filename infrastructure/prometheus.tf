@@ -24,7 +24,7 @@ resource "azurerm_container_app" "prometheus" {
 
       env {
         name  = "BACKEND_URL"
-        value = "https://${azurerm_container_app.backend.latest_revision_fqdn}/actuator/prometheus"
+        value = "https://${azurerm_container_app.backend.configuration[0].ingress[0].fqdn}/actuator/prometheus"
       }
     }
   }
