@@ -101,13 +101,14 @@ jobs:
             --query "[].{Name:name, Active:active, Replicas:properties.replicas, ProvisioningState:properties.provisioningState}" \
             -o table
 
-      - name: Get revision logs by manual replica
+      - name: Get logs for failing revision
         run: |
-          echo "Getting revision logs by manual replica..."
-          az containerapp revision logs \
+          echo "Getting revision logs for manual replica..."
+          az containerapp logs \
             --name orders-backend-dev-01 \
             --resource-group orders-rg-app-dev-westus2-01 \
-            --revision orders-backend-dev-01--n9u1otk
+            --revision orders-backend-dev-01--n9u1otk \
+            --follow
 
 
 
