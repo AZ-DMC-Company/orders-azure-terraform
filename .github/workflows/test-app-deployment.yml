@@ -107,7 +107,7 @@ jobs:
           az containerapp logs show \
             --name orders-backend-dev-01 \
             --resource-group orders-rg-app-dev-westus2-01 \
-            --revision orders-backend-dev-01--n9u1otk
+            --revision orders-backend-dev-01--n9u1otk \
             --tail 200
 
       - name: Get Backend CA logs
